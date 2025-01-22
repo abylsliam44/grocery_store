@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/products" id="products-link">Products</a></li>
+                <li><a href="/cart" id="cart-link">Cart</a></li>
+                <li><a href="/users/login" id="login-link">Login</a></li>
+                <li><a href="/users/register" id="register-link">Register</a></li>
+                <li><a href="/users/logout" id="logout-link">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {{ template "content" . }}
+    </main>
+    <footer>
+        <p>&copy; 2025 Grocery Store</p>
+    </footer>
+    <script src="/static/js/scripts.js"></script>
+</body>
+</html>

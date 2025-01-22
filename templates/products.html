@@ -1,0 +1,44 @@
+{{define "content"}}
+<h2>Products</h2>
+<ul>
+    {{range .Products}}
+    <li>
+        <h3>{{.Name}}</h3>
+        <p>Price: ${{.Price}}</p>
+        <label for="quantity-{{.ID}}">Quantity:</label>
+        <input type="number" id="quantity-{{.ID}}" value="1" min="1">
+        <button onclick="addToCart({{.ID}})">Add to Cart</button>
+    </li>
+    {{end}}
+</ul>
+
+<script>
+    async function addToCart(productID) {
+        const quantity = document.getElementById(`quantity-${productID}`).value;
+
+        try {
+            const response = await fetch('/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: productID,
+                    quantity: parseInt(quantity, 10)
+                }),
+            });
+
+            if (response.ok) {
+                const result = await response.text();
+                alert(result); // Уведомление об успешном добавлении
+            } else {
+                const error = await response.text();
+                alert(`Failed to add to cart: ${error}`);
+            }
+        } catch (err) {
+            console.error('Error adding to cart:', err);
+            alert('An error occurred. Please try again.');
+        }
+    }
+</script>
+{{end}}
