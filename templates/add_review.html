@@ -1,0 +1,40 @@
+{{define "content"}}
+<h2>Leave a Review for {{.Product.Name}}</h2>
+
+<form method="POST" action="/add-review?product_id={{.Product.ID}}">
+    <div class="form-group">
+        <label for="rating">Rating:</label>
+        <div id="rating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+    </div>
+    
+    <input type="hidden" name="rating" id="rating-input" value="1">
+    
+    <div class="form-group">
+        <label for="review">Review:</label>
+        <textarea name="review" id="review" class="form-control" rows="4"></textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
+
+<script>
+    // Обработчик для звездочек
+    document.querySelectorAll(".star").forEach(star => {
+        star.addEventListener("click", function() {
+            let rating = this.getAttribute("data-value");
+            document.getElementById("rating-input").value = rating;
+
+            // Обновление визуальных звездочек
+            document.querySelectorAll(".star").forEach(star => {
+                star.style.color = star.getAttribute("data-value") <= rating ? "gold" : "gray";
+            });
+        });
+    });
+</script>
+{{end}}

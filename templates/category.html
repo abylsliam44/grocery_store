@@ -1,31 +1,6 @@
 {{define "content"}}
 <div class="container">
-    <h2 class="my-4">Products</h2>
-
-    <!-- Форма для поиска -->
-    <form method="get" action="/products" class="mb-4">
-        <div class="row">
-            <div class="col-md-6">
-                <input type="text" name="search_query" class="form-control" placeholder="Search by name or category" value="{{.SearchQuery}}" onchange="this.form.submit()">
-            </div>
-            <div class="col-md-3">
-                <select name="sort_by" class="form-select" onchange="this.form.submit()">
-                    <option value="price" {{if eq .SortBy "price"}}selected{{end}}>Price</option>
-                    <option value="name" {{if eq .SortBy "name"}}selected{{end}}>Name</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select name="sort_order" class="form-select" onchange="this.form.submit()">
-                    <option value="asc" {{if eq .SortOrder "asc"}}selected{{end}}>Ascending</option>
-                    <option value="desc" {{if eq .SortOrder "desc"}}selected{{end}}>Descending</option>
-                </select>
-            </div>
-        </div>
-    </form>
-
-    <!-- Кнопка для перехода к категориям -->
-    <a href="/categories" class="btn btn-secondary mb-4">View Categories</a>
-
+    <h2 class="my-4">{{.CategoryName}}</h2>
     <div class="row">
         {{range .Products}}
         <div class="col-md-4">
@@ -39,8 +14,6 @@
                         <input type="number" id="quantity-{{.ID}}" value="1" min="1" class="form-control">
                     </div>
                     <button class="btn btn-primary w-100" onclick="addToCart({{.ID}})">Add to Cart</button>
-                    <!-- Кнопка для перехода на страницу с отзывами -->
-                    <a href="/products/{{.ID}}" class="btn btn-link w-100 mt-2">View Reviews</a>
                 </div>
             </div>
         </div>

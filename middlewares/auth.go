@@ -12,10 +12,12 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, _ := Store.Get(r, "session-name")
 		userID, ok := session.Values["user_id"].(int)
-		if !ok || userID == 0 {
+		if !ok || userID <= 0 {
+			// Перенаправление на страницу логина, если сессия не найдена
 			http.Redirect(w, r, "/users/login", http.StatusSeeOther)
 			return
 		}
+		// Передача управления следующему обработчику
 		next.ServeHTTP(w, r)
 	})
 }

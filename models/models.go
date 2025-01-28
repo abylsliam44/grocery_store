@@ -1,10 +1,12 @@
 package models
 
 type Product struct {
-	ID    int     `json:"id"`
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
-	Stock int     `json:"stock"`
+	ID       int     `json:"id"`
+	Name     string  `json:"name"`
+	Price    float64 `json:"price"`
+	Stock    int     `json:"stock"`
+	ImageURL string  `json:"image_url"`
+	Category string  `json:"category"`
 }
 
 type User struct {
@@ -20,4 +22,16 @@ type CartItem struct {
 	Price       float64
 	Quantity    int
 	Total       float64
+}
+
+type Category struct {
+	ID       int
+	Name     string
+	Products []Product
+}
+
+type Review struct {
+	Rating int
+	Review string
+	User   User
 }

@@ -1,4 +1,4 @@
-{{ define "content" }}
+{{define "content"}}
 <h2>Register</h2>
 <form action="/users/register" method="POST">
     <label for="name">Name:</label>
@@ -7,6 +7,6 @@
     <input type="email" id="email" name="email" required>
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required>
-    <button type="submit">Register</button>
+    <button type="submit" class="btn btn-primary">Register</button>
 </form>
-{{ end }}
+{{end}}
