@@ -26,6 +26,8 @@ func main() {
 	r.HandleFunc("/products/category/{id}", handlers.CategoryHandler).Methods("GET")
 	r.HandleFunc("/add-review", handlers.AddReviewHandler).Methods("GET", "POST")
 	r.HandleFunc("/products/{id}", handlers.ProductDetailHandler).Methods("GET")
+	r.HandleFunc("/blog", handlers.BlogHandler).Methods("GET")
+	r.HandleFunc("/blog/{id:[0-9]+}", handlers.BlogPostHandler).Methods("GET")
 
 	// Защищённые маршруты
 	r.Handle("/products", middlewares.AuthMiddleware(http.HandlerFunc(handlers.ProductsHandler))).Methods("GET")
@@ -34,7 +36,7 @@ func main() {
 	r.Handle("/cart/delete", middlewares.AuthMiddleware(http.HandlerFunc(handlers.DeleteFromCartHandler))).Methods("POST")
 
 	r.Handle("/users/logout", middlewares.AuthMiddleware(http.HandlerFunc(handlers.LogoutHandler))).Methods("GET")
-	// Добавление маршрута для страницы профиля
+
 	r.Handle("/users/profile", middlewares.AuthMiddleware(http.HandlerFunc(handlers.ProfileHandler))).Methods("GET", "POST")
 
 	// Статические файлы

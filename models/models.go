@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Product struct {
 	ID       int     `json:"id"`
 	Name     string  `json:"name"`
@@ -34,4 +36,11 @@ type Review struct {
 	Rating int
 	Review string
 	User   User
+}
+
+type BlogPost struct {
+	ID        int       `json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"created_at"`
 }

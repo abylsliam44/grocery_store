@@ -1,31 +1,39 @@
 {{define "content"}}
-<h2>Your Cart</h2>
-<table>
-    <thead>
-        <tr>
-            <th>PRODUCT</th>
-            <th>QUANTITY</th>
-            <th>PRICE</th>
-            <th>TOTAL</th>
-            <th>ACTION</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{range .CartItems}}
-        <tr>
-            <td>{{.ProductName}}</td>
-            <td>{{.Quantity}}</td>
-            <td>${{.Price}}</td>
-            <td>${{.Total}}</td>
-            <td>
-                <form action="/cart/delete" method="POST">
-                    <input type="hidden" name="product_id" value="{{.ProductID}}">
-                    <button type="submit" class="btn">Remove</button>
-                </form>
-            </td>
-        </tr>
-        {{end}}
-    </tbody>
-</table>
-<a href="/products" class="btn">Continue Shopping</a>
+
+<div class="container">
+    <h2>Your Cart</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>PRODUCT</th>
+                <th>QUANTITY</th>
+                <th>PRICE</th>
+                <th>TOTAL</th>
+                <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .CartItems}}
+            <tr>
+                <td>{{.ProductName}}</td>
+                <td>{{.Quantity}}</td>
+                <td>${{.Price}}</td>
+                <td>${{.Total}}</td>
+                <td>
+                    <form action="/cart/delete" method="POST">
+                        <input type="hidden" name="product_id" value="{{.ProductID}}">
+                        <button type="submit" class="btn btn-remove">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    <div class="cart-actions">
+        <a href="/products" class="btn">Continue Shopping</a>
+    </div>
+</div>
+
+
+
 {{end}}
