@@ -11,7 +11,6 @@ import (
 )
 
 func BlogHandler(w http.ResponseWriter, r *http.Request) {
-	// Получаем все посты блога
 	rows, err := database.DB.Query("SELECT id, title, content, created_at FROM blog_posts ORDER BY created_at DESC")
 	if err != nil {
 		http.Error(w, "Unable to fetch blog posts", http.StatusInternalServerError)
@@ -29,10 +28,7 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 		posts = append(posts, post)
 	}
 
-	// Логируем количество постов
 	fmt.Printf("Number of posts: %d\n", len(posts))
-
-	// Рендерим шаблон с постами блога
 	tmpl, err := template.ParseFiles("templates/base.html", "templates/blog.html")
 	if err != nil {
 		http.Error(w, "Unable to load template", http.StatusInternalServerError)
@@ -44,12 +40,13 @@ func BlogHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// хэндлер для конкр поста
+
 func BlogPostHandler(w http.ResponseWriter, r *http.Request) {
-	// Извлекаем параметр id из URL
+
 	vars := mux.Vars(r)
 	postID := vars["id"]
 
-	// Получаем данные о посте
 	var post models.BlogPost
 	err := database.DB.QueryRow("SELECT id, title, content, created_at FROM blog_posts WHERE id = $1", postID).
 		Scan(&post.ID, &post.Title, &post.Content, &post.CreatedAt)
@@ -58,7 +55,6 @@ func BlogPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Рендерим шаблон с данными поста
 	tmpl, err := template.ParseFiles("templates/base.html", "templates/blog_post.html")
 	if err != nil {
 		fmt.Println("Error loading template:", err)

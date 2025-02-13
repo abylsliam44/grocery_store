@@ -1,19 +1,19 @@
 {{define "content"}}
 <div class="container">
     <h2>{{.Product.Name}}</h2>
-    <img src="{{.Product.ImageURL}}" class="img-fluid" alt="{{.Product.Name}}">
+    <img src="{{.Product.ImageURL}}" class="img-fluid product-image" alt="{{.Product.Name}}">
     <p>Price: ${{.Product.Price}}</p>
 
     <h3>Reviews</h3>
     {{if .Reviews}}
-        <ul>
+        <ol>
             {{range .Reviews}}
                 <li>
                     <strong>{{.User.Name}}</strong> (Rating: {{.Rating}}/5)
                     <p>{{.Review}}</p>
                 </li>
             {{end}}
-        </ul>
+        </ol>
     {{else}}
         <p>No reviews yet.</p>
     {{end}}

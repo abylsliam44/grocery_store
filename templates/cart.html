@@ -2,7 +2,7 @@
 
 <div class="container">
     <h2>Your Cart</h2>
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th>PRODUCT</th>
@@ -16,24 +16,30 @@
             {{range .CartItems}}
             <tr>
                 <td>{{.ProductName}}</td>
-                <td>{{.Quantity}}</td>
+                <td>
+                    <form action="/cart/update" method="POST">
+                        <input type="number" name="quantity" value="{{.Quantity}}" min="1" max="{{.Stock}}" class="form-control" />
+                        <input type="hidden" name="product_id" value="{{.ProductID}}" />
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </td>
                 <td>${{.Price}}</td>
                 <td>${{.Total}}</td>
                 <td>
                     <form action="/cart/delete" method="POST">
                         <input type="hidden" name="product_id" value="{{.ProductID}}">
-                        <button type="submit" class="btn btn-remove">Remove</button>
+                        <button type="submit" class="btn btn-danger">Remove</button>
                     </form>
                 </td>
             </tr>
             {{end}}
         </tbody>
     </table>
+
     <div class="cart-actions">
-        <a href="/products" class="btn">Continue Shopping</a>
+        <p><strong>Total Price: ${{.TotalCartPrice}}</strong></p>
+        <a href="/products" class="btn btn-success">Continue Shopping</a>
     </div>
 </div>
-
-
 
 {{end}}

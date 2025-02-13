@@ -7,7 +7,7 @@
             {{range .Posts}}
                 <a href="/blog/{{.ID}}" class="list-group-item list-group-item-action">
                     <h5 class="mb-1">{{.Title}}</h5>
-                    <p class="mb-1">{{.Content}}</p> <!-- Просто выводим весь контент -->
+                    <p class="mb-1">{{.Content}}</p> 
                     <small>Posted on: {{.CreatedAt}}</small>
                 </a>
             {{end}}

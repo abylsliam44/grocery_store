@@ -10,7 +10,7 @@ import (
 )
 
 func ProfileHandler(w http.ResponseWriter, r *http.Request) {
-	// Получаем user_id из сессии
+
 	session, _ := middlewares.Store.Get(r, "session-name")
 	userID, ok := session.Values["user_id"].(int)
 	isAuthenticated := false
@@ -22,7 +22,6 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Если метод GET, то просто выводим профиль
 	if r.Method == http.MethodGet {
 		var user models.User
 		err := database.DB.QueryRow("SELECT id, name, email FROM users WHERE id = $1", userID).Scan(&user.ID, &user.Name, &user.Email)
@@ -48,14 +47,12 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Если метод POST, то обновляем информацию
 	if r.Method == http.MethodPost {
-		// Получаем новые данные из формы
+
 		name := r.FormValue("name")
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 
-		// Обновляем данные пользователя в базе
 		_, err := database.DB.Exec("UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4", name, email, password, userID)
 		if err != nil {
 			log.Println("Error updating user data:", err)
@@ -63,7 +60,6 @@ func ProfileHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Перенаправляем на страницу профиля после обновления
 		http.Redirect(w, r, "/users/profile", http.StatusSeeOther)
 		return
 	}

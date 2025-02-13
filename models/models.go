@@ -24,6 +24,7 @@ type CartItem struct {
 	Price       float64
 	Quantity    int
 	Total       float64
+	Stock       int
 }
 
 type Category struct {

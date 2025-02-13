@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Подсвечиваем текущую страницу в навигации
+    
     const links = document.querySelectorAll("nav ul li a");
     links.forEach(link => {
         if (link.href === window.location.href) {
@@ -7,12 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
             link.style.textDecoration = "underline";
         }
     });
-
-    // Обработка добавления в корзину
+    
     const addToCartForms = document.querySelectorAll("form[action='/cart']");
     addToCartForms.forEach(form => {
         form.addEventListener("submit", async (e) => {
-            e.preventDefault(); // Убедитесь, что это уместно
+            e.preventDefault(); 
             const formData = new FormData(form);
 
             try {
@@ -33,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Анимация перехода между страницами
     links.forEach(link => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
@@ -44,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Уведомления
     function showAlert(message, isError = false) {
         const alert = document.createElement("div");
         alert.className = "alert" + (isError ? " error" : "");
@@ -61,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3000);
     }
 
-    // Приветственное сообщение в зависимости от времени суток
     const greetingElement = document.getElementById("greeting-message");
     const currentHour = new Date().getHours();
     let greetingText = "";
@@ -78,31 +74,28 @@ document.addEventListener("DOMContentLoaded", () => {
         greetingElement.textContent = greetingText;
     }
 
-    // Анимация карточек продуктов при загрузке
     const productCards = document.querySelectorAll(".product-card");
     productCards.forEach((card, index) => {
         setTimeout(() => {
             card.classList.add("animate__animated", "animate__fadeInUp");
-        }, 200 * index); // Добавляем анимацию с задержкой
+        }, 200 * index); 
     });
 
     const form = document.getElementById("city-form");
     const cityInput = document.getElementById("city-input");
     const weatherElement = document.getElementById("weather-info");
 
-    // Обработчик формы
     form.addEventListener("submit", (e) => {
-        e.preventDefault(); // Предотвратить перезагрузку страницы при отправке формы
-        const city = cityInput.value.trim(); // Получаем город из input
+        e.preventDefault(); 
+        const city = cityInput.value.trim(); 
 
         if (city) {
-            getWeather(city); // Запрос погоды
+            getWeather(city); 
         }
     });
 
-    // Получение погоды
     function getWeather(city) {
-        const apiKey = "bc293dcd2a2e840cdaefee93433832a5"; // Замените на ваш ключ
+        const apiKey = "bc293dcd2a2e840cdaefee93433832a5"; 
         fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
             .then(response => {
                 if (!response.ok) {
@@ -121,3 +114,51 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Обработчик изменения количества товаров
+    document.querySelectorAll('.increase').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var productId = this.getAttribute('data-id');
+            var quantityInput = document.getElementById('quantity-' + productId);
+            var currentQuantity = parseInt(quantityInput.value);
+            quantityInput.value = currentQuantity + 1;
+
+            updateCart(productId, currentQuantity + 1);
+        });
+    });
+
+    document.querySelectorAll('.decrease').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var productId = this.getAttribute('data-id');
+            var quantityInput = document.getElementById('quantity-' + productId);
+            var currentQuantity = parseInt(quantityInput.value);
+            if (currentQuantity > 1) {
+                quantityInput.value = currentQuantity - 1;
+                updateCart(productId, currentQuantity - 1);
+            }
+        });
+    });
+
+    function updateCart(productId, newQuantity) {
+        var formData = new FormData();
+        formData.append('product_id', productId);
+        formData.append('quantity', newQuantity);
+
+        fetch('/cart/update', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Обновляем стоимость каждого товара
+            document.getElementById('total-' + productId).textContent = "$" + data.itemTotal;
+
+            // Обновляем общую сумму корзины
+            var totalPrice = data.totalPrice;
+            document.getElementById('total-price').textContent = totalPrice.toFixed(2);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+});
+

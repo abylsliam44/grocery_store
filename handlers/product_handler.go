@@ -12,19 +12,18 @@ import (
 )
 
 func ProductsHandler(w http.ResponseWriter, r *http.Request) {
-	// Получаем параметры сортировки и поиска
+
 	sortBy := r.URL.Query().Get("sort_by")
 	sortOrder := r.URL.Query().Get("sort_order")
 	searchQuery := r.URL.Query().Get("search_query")
 
 	if sortOrder == "" {
-		sortOrder = "asc" // по умолчанию сортируем по возрастанию
+		sortOrder = "asc"
 	}
 	if sortBy == "" {
-		sortBy = "price" // по умолчанию сортируем по цене
+		sortBy = "price"
 	}
 
-	// Строим SQL запрос с учетом сортировки и поиска
 	query := fmt.Sprintf(`
         SELECT id, name, price, stock, image_url
         FROM products
@@ -49,7 +48,6 @@ func ProductsHandler(w http.ResponseWriter, r *http.Request) {
 		products = append(products, product)
 	}
 
-	// Получаем информацию о том, авторизован ли пользователь
 	session, _ := middlewares.Store.Get(r, "session-name")
 	userID, ok := session.Values["user_id"].(int)
 	isAuthenticated := false
@@ -57,7 +55,6 @@ func ProductsHandler(w http.ResponseWriter, r *http.Request) {
 		isAuthenticated = true
 	}
 
-	// Рендерим шаблон
 	tmpl, err := template.ParseFiles("templates/base.html", "templates/products.html")
 	if err != nil {
 		http.Error(w, "Unable to load template", http.StatusInternalServerError)
@@ -76,11 +73,10 @@ func ProductsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ProductDetailHandler(w http.ResponseWriter, r *http.Request) {
-	// Извлекаем параметр id из URL
+
 	vars := mux.Vars(r)
 	productID := vars["id"]
 
-	// Получаем данные о товаре
 	var product models.Product
 	err := database.DB.QueryRow("SELECT id, name, price, image_url FROM products WHERE id = $1", productID).
 		Scan(&product.ID, &product.Name, &product.Price, &product.ImageURL)
@@ -89,7 +85,6 @@ func ProductDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Получаем отзывы для товара
 	rows, err := database.DB.Query("SELECT r.rating, r.review, u.name FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.product_id = $1 ORDER BY r.created_at DESC", productID)
 	if err != nil {
 		http.Error(w, "Unable to fetch reviews", http.StatusInternalServerError)
@@ -107,7 +102,6 @@ func ProductDetailHandler(w http.ResponseWriter, r *http.Request) {
 		reviews = append(reviews, review)
 	}
 
-	// Проверка, авторизован ли пользователь
 	session, _ := middlewares.Store.Get(r, "session-name")
 	userID, ok := session.Values["user_id"].(int)
 	isAuthenticated := false
@@ -115,18 +109,16 @@ func ProductDetailHandler(w http.ResponseWriter, r *http.Request) {
 		isAuthenticated = true
 	}
 
-	// Рендерим шаблон с товаром и отзывами
 	tmpl, err := template.ParseFiles("templates/base.html", "templates/product_detail.html")
 	if err != nil {
 		http.Error(w, "Unable to load template", http.StatusInternalServerError)
 		return
 	}
 
-	// Передаем данные в шаблон
 	data := map[string]interface{}{
 		"Product":         product,
 		"Reviews":         reviews,
-		"IsAuthenticated": isAuthenticated, // Добавляем флаг для отображения формы отзыва
+		"IsAuthenticated": isAuthenticated,
 	}
 
 	tmpl.Execute(w, data)

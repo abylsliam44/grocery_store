@@ -12,13 +12,10 @@ import (
 )
 
 func main() {
-	// Подключение к базе данных
 	database.Connect()
 
-	// Инициализация маршрутов
 	r := mux.NewRouter()
 
-	// Открытые маршруты
 	r.HandleFunc("/users/register", handlers.RegisterHandler).Methods("GET", "POST")
 	r.HandleFunc("/users/login", handlers.LoginHandler).Methods("GET", "POST")
 	r.HandleFunc("/test", handlers.TestHandler)
@@ -29,21 +26,19 @@ func main() {
 	r.HandleFunc("/blog", handlers.BlogHandler).Methods("GET")
 	r.HandleFunc("/blog/{id:[0-9]+}", handlers.BlogPostHandler).Methods("GET")
 
-	// Защищённые маршруты
 	r.Handle("/products", middlewares.AuthMiddleware(http.HandlerFunc(handlers.ProductsHandler))).Methods("GET")
 	r.Handle("/cart", middlewares.AuthMiddleware(http.HandlerFunc(handlers.CartHandler))).Methods("GET")
 	r.Handle("/cart", middlewares.AuthMiddleware(http.HandlerFunc(handlers.AddToCartHandler))).Methods("POST")
 	r.Handle("/cart/delete", middlewares.AuthMiddleware(http.HandlerFunc(handlers.DeleteFromCartHandler))).Methods("POST")
+	r.Handle("/cart/update", middlewares.AuthMiddleware(http.HandlerFunc(handlers.UpdateCartHandler))).Methods("POST")
 
 	r.Handle("/users/logout", middlewares.AuthMiddleware(http.HandlerFunc(handlers.LogoutHandler))).Methods("GET")
 
 	r.Handle("/users/profile", middlewares.AuthMiddleware(http.HandlerFunc(handlers.ProfileHandler))).Methods("GET", "POST")
 
-	// Статические файлы
 	fs := http.FileServer(http.Dir("./static/"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
 
-	// Запуск сервера
 	log.Println("Server started on :8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
